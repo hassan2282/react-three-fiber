@@ -1,33 +1,45 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import { Icon } from 'react-icons-kit'
 import {eye} from 'react-icons-kit/feather/eye';
-import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import './App.css';
+import { Canvas, useFrame } from '@react-three/fiber';
 
 function App() {
 
-  const [type, setType] = useState("password");
-  const [eyeToggle, setEyeToggle] = useState(eyeOff);
-  
-  const clickHandler = () => {
-    if (type === 'password') {
-      setType('text');
-      setEyeToggle(eye);
-    }else {
-      setType('password');
-      setEyeToggle(eyeOff);
-    }
+  function AnimatedBox () {
+    const boxRef = useRef()
+    
+    useFrame(()=>{
+      boxRef.current.rotation.x += 0.005;
+      boxRef.current.rotation.y += 0.005;
+      boxRef.current.rotation.z += 0.005;
+    })
+
+    return (
+      <mesh ref={boxRef}>
+        <boxGeometry args={[2,2,2]}/>
+        <meshStandardMaterial color="gold" />
+      </mesh>
+    );
   }
 
-
   return (
-    <div className="flex flex-row h-screen w-screen p-2 bg-rose-500 justify-center">
-      <div className='flex w-screen bg-red-400 rounded p-2 justify-center items-center'>
-        <input type={type} className='h-[58px] rounded w-2/6 bg-stone-200 p-2 text-center text-lime-500' placeholder='رمز عبور'></input>
-        <Icon onClick={clickHandler} icon={eyeToggle} size={25} className='ml-1 hover:cursor-pointer hover:shadow-none duration-300 
-        p-3 shadow-md shadow-rose-200 rounded border-2 border-rose-300'/>  
+    <div className="flex flex-row h-screen w-screen bg-zinc-800 justify-center">
+      <Canvas className='w-32 h-32' camera={{position: [2,2,2]}}>
 
-      </div>
+
+
+        {/* <mesh position={[-2,2,-1]} rotation={[0,0,Math.PI]} scale={[2, 2.5,2]}> */}
+          {/* <sphereGeometry args={[3,8,8]} /> */}
+          {/* <boxGeometry args={[2,3,2]}/> */}
+          {/* <torusKnotGeometry args={[1.7, 0.3, 256, 256]}/> */}
+          {/* <meshBasicMaterial color="gold"/> */}
+          {/* <meshPhongMaterial color="gold"/> */}
+        {/* </mesh> */}
+
+          <AnimatedBox />
+          <directionalLight position={[2,5,1]}/>
+      </Canvas>
     </div>
   );
 }
